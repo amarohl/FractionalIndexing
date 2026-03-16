@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
+using System.Xml;
 
 namespace FractionalIndexing;
 
@@ -19,10 +21,11 @@ public static class Challenge
        string[] first = ["a","b","c","d","e","f"];
        string filler = "f";
        string last = "V";
-       
+
        for(int i = 0; i <= length; i++ )
         {
-            
+            // TO DO: firgure out how we store the output and how to make new ones each time? Might have to talk to jim some more on this one.
+            List<string> output =new List<string>();
         }
         throw new NotImplementedException();
     }
