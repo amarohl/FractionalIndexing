@@ -1,4 +1,6 @@
-﻿namespace FractionalIndexing;
+﻿using System.Globalization;
+
+namespace FractionalIndexing;
 
 public static class Challenge
 {
@@ -13,6 +15,15 @@ public static class Challenge
     /// </summary>
     public static List<string> GenerateDefaultFractionalIndices(int length)
     {
+        // not sure how many arrays will be input, but i has to be at least 6
+       string[] first = ["a","b","c","d","e","f"];
+       string filler = "f";
+       string last = "V";
+       
+       for(int i = 0; i <= length; i++ )
+        {
+            
+        }
         throw new NotImplementedException();
     }
 }
