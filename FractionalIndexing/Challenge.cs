@@ -15,18 +15,62 @@ public static class Challenge
     /// Items fill each prefix group exhaustively before advancing to the next.
     /// It throws `ArgumentOutOfRangeException` for negative input.
     /// </summary>
-    public static List<string> GenerateDefaultFractionalIndices(int length)
-    {
-        // not sure how many arrays will be input, but i has to be at least 6
-       string[] first = ["a","b","c","d","e","f"];
-       string filler = "f";
-       string last = "V";
 
-       for(int i = 0; i <= length; i++ )
+       // bits is 62 bits to account for needing to return an empty array
+    private static readonly char[] Bits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".ToCharArray();
+    private const int FixedLength = 8;
+    private const int SuffixLength = 1;      // final 'V'
+    private const int PrefixLength = 1;      // 'a'..'f'
+    private const int MaxDigitCount = 6;     // 'a' => 1, ..., 'f' => 6
+    private const int MaxContentLength = FixedLength - PrefixLength - SuffixLength; // 6
+    public static List<string>GenerateDefaultFractionalIndices(int length)
+    {
+        List<string> output = new List<string>();
+        if (length < 0)
+            throw new ArgumentOutOfRangeException(nameof(length));
+
+        var result = new List<string>(length);
+        if (length == 0)
+            return output;
+
+        long[] pow62 = new long[MaxDigitCount + 1];
+        pow62[0] = 1;
+        for (int i = 1; i <= MaxDigitCount; i++)
+            pow62[i] = pow62[i - 1] * Bits.Length;
+
+        for (int prefixIdx = 0; prefixIdx < MaxDigitCount && result.Count < length; prefixIdx++)
         {
-            // TO DO: firgure out how we store the output and how to make new ones each time? Might have to talk to jim some more on this one.
-            List<string> output =new List<string>();
+            int digitCount = prefixIdx + 1;      // a=1, b=2, ...
+            long available = pow62[digitCount];
+            long needed = length - result.Count;
+            long toGenerate = Math.Min(available, needed);
+
+            string prefix = ((char)('a' + prefixIdx)).ToString();
+            int fillerCount = MaxContentLength - digitCount;
+
+            for (long n = 0; n < toGenerate; n++)
+            {
+                Span<char> content = stackalloc char[digitCount];
+                long value = n;
+                for (int d = digitCount - 1; d >= 0; d--)
+                {
+                    int digit = (int)(value % Bits.Length);
+                    content[d] = Bits[digit];
+                    value /= Bits.Length;
+                }
+
+                var sb = new System.Text.StringBuilder(FixedLength);
+                sb.Append(prefix);
+                sb.Append(content);
+                if (fillerCount > 0)
+                    sb.Append('f', fillerCount);
+                sb.Append('V');
+
+                result.Add(sb.ToString());
+            }
         }
+
+        return result;
         throw new NotImplementedException();
-    }
+    }       
 }
