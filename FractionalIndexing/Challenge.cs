@@ -31,7 +31,7 @@ public static class Challenge
 
         // var result = new List<string>(length);
         if (length == 0)
-            output.Add(string.Empty);
+            return output;
 
         long[] pow62 = new long[MaxDigitCount + 1];
         pow62[0] = 1;
