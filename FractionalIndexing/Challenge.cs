@@ -25,24 +25,24 @@ public static class Challenge
     private const int MaxContentLength = FixedLength - PrefixLength - SuffixLength; // 6
     public static List<string>GenerateDefaultFractionalIndices(int length)
     {
-        List<string> output = new List<string>();
+        List<string> output = new List<string>(length);
         if (length < 0)
             throw new ArgumentOutOfRangeException(nameof(length));
 
-        var result = new List<string>(length);
+        // var result = new List<string>(length);
         if (length == 0)
-            return output;
+            output.Add(string.Empty);
 
         long[] pow62 = new long[MaxDigitCount + 1];
         pow62[0] = 1;
         for (int i = 1; i <= MaxDigitCount; i++)
             pow62[i] = pow62[i - 1] * Bits.Length;
 
-        for (int prefixIdx = 0; prefixIdx < MaxDigitCount && result.Count < length; prefixIdx++)
+        for (int prefixIdx = 0; prefixIdx < MaxDigitCount && output.Count < length; prefixIdx++)
         {
             int digitCount = prefixIdx + 1;      // a=1, b=2, ...
             long available = pow62[digitCount];
-            long needed = length - result.Count;
+            long needed = length - output.Count;
             long toGenerate = Math.Min(available, needed);
 
             string prefix = ((char)('a' + prefixIdx)).ToString();
@@ -66,11 +66,11 @@ public static class Challenge
                     sb.Append('f', fillerCount);
                 sb.Append('V');
 
-                result.Add(sb.ToString());
+                output.Add(sb.ToString());
             }
         }
 
-        return result;
+        return output;
         throw new NotImplementedException();
     }       
 }
