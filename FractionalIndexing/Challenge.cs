@@ -50,7 +50,7 @@ public static class Challenge
 
             for (long n = 0; n < toGenerate; n++)
             {
-                Span<char> content = stackalloc char[digitCount];
+                char[] content = new char[digitCount];
                 long value = n;
                 for (int d = digitCount - 1; d >= 0; d--)
                 {
